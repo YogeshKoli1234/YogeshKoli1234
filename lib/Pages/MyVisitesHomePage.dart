@@ -86,6 +86,7 @@ class _MyVisitesHomePage extends State<MyVisitesHomePage> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: const Text('My Visits',
             style: TextStyle(
               fontSize: 22.0,
@@ -94,12 +95,10 @@ class _MyVisitesHomePage extends State<MyVisitesHomePage> {
         ),
         body: Stack(children: [
 
-
-
           Container(
             child: myVisites.isEmpty
-                ? Center(
-              child: const Text(
+                ? const Center(
+              child: Text(
                 'No Data Found',
                 style: TextStyle(
                   fontSize: 24,

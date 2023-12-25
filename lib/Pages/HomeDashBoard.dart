@@ -114,84 +114,100 @@ class _HomeDashBoard extends State<HomeDashBoard> {
     // homeApi();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: const Text('Dashboard',
+              style: TextStyle(
+                fontSize: 22.0,
+                fontWeight: FontWeight.bold,
+              )),
+        ),
         backgroundColor: Colors.white,
         body: Stack(
-
           children: [
-            Container(
-              color: Colors.white,
-              margin: EdgeInsets.fromLTRB(10, 40, 10, 0),
+            RefreshIndicator(
+              onRefresh: _refreshData,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: const Text('Dashboard',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      'Visits Completed',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                  // Top Section
-                  Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // SizedBox(height: 40,),
+                    // const Padding(
+                    //   padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                    //   child: Text('Dashboard',
+                    //       style: TextStyle(
+                    //         fontSize: 22.0,
+                    //         fontWeight: FontWeight.bold,
+                    //       )),
+                    // ),
+                    Expanded(
+                      child: ListView(
+                        padding: EdgeInsets.zero,
                         children: [
-                          _buildBox('This Week', thisWeek.toString(), Colors.green),
-                          _buildBox(
-                              'This Month', thisMonths.toString(), Colors.red),
-                          _buildBox(
-                              'This Quarter', thisYear.toString(), Colors.blue),
-                        ],
-                      )), // Add some space
+                          Container(
+                            color: Colors.white,
+                            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Text(
+                                    'Visits Completed',
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                                // Top Section
+                                Container(
+                                    padding:
+                                    EdgeInsets.symmetric(horizontal: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        _buildBox('This Week',
+                                            thisWeek.toString(), Colors.green),
+                                        _buildBox('This Month',
+                                            thisMonths.toString(), Colors.red),
+                                        _buildBox('This Quarter',
+                                            thisYear.toString(), Colors.blue),
+                                      ],
+                                    )), // Add some space
 
-                  // List of Account Types
-                  Container(
-                    margin: EdgeInsets.fromLTRB(10, 20, 0, 5),
-                    child: const Text(
-                      'Branch Analytics',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.normal,
+                                // List of Account Types
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(10, 20, 0, 5),
+                                  child: const Text(
+                                    'Branch Analytics',
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Container(
+                                child: _buildAccountTypeList(accounts)),
+                          )
+                        ],
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: _refreshData,
-                      child: Container(
-                        child: ListView(
-                          padding: EdgeInsets.zero,
-                          children: [
-                            Container(child: _buildAccountTypeList(accounts))
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                  ]),
             ),
             if (loaderStatus)
-            // Loader overlay
+              // Loader overlay
               Container(
                 color: Colors.black.withOpacity(0.5),
                 // Change the color and opacity as needed
@@ -206,7 +222,6 @@ class _HomeDashBoard extends State<HomeDashBoard> {
       ),
     );
   }
-
 
   Widget _buildBox(String title, String amount, Color textColor) {
     return Expanded(
@@ -258,14 +273,7 @@ class _HomeDashBoard extends State<HomeDashBoard> {
             (type['amount'] != null) ? "₹ " + type['amount'].toString() : '0';
 
         return GestureDetector(
-          // onTap: () {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) =>
-          //             const AccountTrrnList(title: '', accountNum: "")),
-          //   );
-          // },
+
           child: Card(
             color: Color(0xFF23303B),
             child: Padding(
@@ -289,7 +297,6 @@ class _HomeDashBoard extends State<HomeDashBoard> {
                                 ),
                               ),
                               Spacer(),
-
                               Text(
                                 account,
                                 style: TextStyle(
@@ -298,7 +305,6 @@ class _HomeDashBoard extends State<HomeDashBoard> {
                                   color: Color(0xFFFFFFFF),
                                 ),
                               )
-
                             ],
                           ),
                           SizedBox(height: 8.0),

@@ -11,6 +11,7 @@ import '../Constants/Functions.dart';
 import '../Constants/StaticConstant.dart';
 import 'LoginPage.dart';
 import 'MainPageDeshboard.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key, required this.title});
@@ -41,12 +42,15 @@ class _SplashScreen extends State<SplashScreen> {
     print(response.body);
   }
 
-  // SharedPreferences prefs =  SharedPreferences.getInstance() as SharedPreferences;
 
+  // SharedPreferences prefs =  SharedPreferences.getInstance() as SharedPreferences;
+  
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+
 
     auth = LocalAuthentication();
     auth.isDeviceSupported().then((bool isSupported) => setState(() {

@@ -41,20 +41,20 @@ class _AccountTrrnList extends State<AccountTrrnList> {
   String sanctionDate = "";
   String npaDate = "";
   String pendingAmount = "";
+  Map<String, dynamic> accountInfo = {};
 
   void refreshData(String newData) {
-
     visits(accountNum);
     setState(() {
       // data = newData;
     });
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     visits(accountNum);
-
 
     print(accountNum);
     // _determinePosition();
@@ -88,18 +88,18 @@ class _AccountTrrnList extends State<AccountTrrnList> {
       // Do something with responseData
       print('Visites List Api: ${responseData}');
       if (responseData['status'] == "success") {
-        Map<String, dynamic> accountInfo = responseData['data']['account'];
+        accountInfo = responseData['data']['account'];
 
         print("visits Details " + responseData['data']['account'].toString());
 
         setState(() {
           visitsList = responseData['data']['visits'] ?? [];
           customerName = accountInfo['customername'];
-          loanType = accountInfo['type'];
-          loanAmount = "₹ " + accountInfo['amount'];
-          sanctionDate = accountInfo['sanctiondate'];
-          npaDate = accountInfo['npadate'];
-          pendingAmount = "₹ " + accountInfo['pendingamount'].toString();
+          // loanType = accountInfo['type'];
+          // loanAmount = "₹ " + accountInfo['amount'];
+          // sanctionDate = accountInfo['sanctiondate'];
+          // npaDate = accountInfo['npadate'];
+          // pendingAmount = "₹ " + accountInfo['pendingamount'].toString();
           print("pendingAmount $pendingAmount");
         });
       }
@@ -139,302 +139,331 @@ class _AccountTrrnList extends State<AccountTrrnList> {
     );
   }
 
+  String capitalizeWords(String input) {
+    if (input == null || input.isEmpty) {
+      return input;
+    }
+
+    List<String> words = input.split(' ');
+    List<String> capitalizedWords = words.map((word) {
+      if (word.isNotEmpty) {
+        return word[0].toUpperCase() + word.substring(1);
+      } else {
+        return '';
+      }
+    }).toList();
+
+    return capitalizedWords.join(' ');
+  }
+
+  Widget _cardItem(Map<String, dynamic> accounts) {
+    return Column(
+      children: accounts.entries.map((type) {
+        // print("Account type" +type.key);
+        if (type.key != "customername") {
+          return Row(
+            children: [
+              Text(
+                capitalizeWords(type.key),
+                style: const TextStyle(
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.normal,
+                  color: Color(0xFFFFFFFF),
+                ),
+              ),
+              const Spacer(),
+              Text(
+                type.value.toString(),
+                style: const TextStyle(
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.normal,
+                  color: Color(0xFFFFFFFF),
+                ),
+              )
+            ],
+          );
+        } else {
+          return Text("");
+        }
+      }).toList(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-            body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Search Bar
+    return DefaultTabController(
+      length: 3,
+      child: Stack(
+        children: [
+          Scaffold(
+              body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Search Bar
 
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(
-                          'assets/ic_back.png',
-                          width: 20,
-                          height: 20,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "Account Details",
-                      style: const TextStyle(
-                          fontSize: 20.0,
-                          color: Color(0xFF3C4B72),
-                          fontFamily: "Poppins"),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Card(
-                color: Color(0xFF607080),
-                child: SizedBox(
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        const Text(
-                          "Customer Name",
-                          style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFFFFFFFF),
-                              fontFamily: 'Poppins'),
-                        ),
-                        Text(
-                          customerName,
-                          style: const TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFFFFFFFF),
-                              fontFamily: 'Poppins'),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                const Text(
-                                  "Loan Amount",
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xFFFFFFFF),
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  loanAmount,
-                                  style: const TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xFFFFFFFF),
-                                  ),
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [
-                                const Text(
-                                  "Loan Type",
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xFFFFFFFF),
-                                  ),
-                                ),
-                                Spacer(),
-                                Text(
-                                  loanType,
-                                  style: const TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xFFFFFFFF),
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [
-                                const Text(
-                                  "Sanction Date : ",
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xFFFFFFFF),
-                                  ),
-                                ),
-                                Spacer(),
-                                Text(
-                                  sanctionDate,
-                                  style: const TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xFFFFFFFF),
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [
-                                const Text(
-                                  "Npa Date ",
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xFFFFFFFF),
-                                  ),
-                                ),
-                                Spacer(),
-                                Text(
-                                  npaDate,
-                                  style: const TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xFFFFFFFF),
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: [
-                                const Text(
-                                  "Pending Amount",
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xFFFFFFFF),
-                                  ),
-                                ),
-                                Spacer(),
-                                Text(
-                                  pendingAmount.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xFFFFFFFF),
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>  AddVisit( title: '',
-                                accountNum: accountNum,refreshFunction : refreshData)));
-
-                    // MaterialPageRoute(builder: (context) =>);
-
-                  },
-                  style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF456EFE),
-                      // Set the background color to #456EFE
-                      minimumSize: Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            8.0), // Set the desired border radius
-                      ) // Set width and height
-                      ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.add_circle_outline_sharp,
-                        color: Color(0xFFFFFFFF),
-                        size: 20,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(
+                            'assets/ic_back.png',
+                            width: 20,
+                            height: 20,
+                          ),
+                        ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
-                      const Text('Add New Visit',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                            color: Color(0xFFFFFFFF),
-                            fontFamily: "Poppins",
-                          )),
+                      const Text(
+                        "Account Details",
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            color: Color(0xFF3C4B72),
+                            fontFamily: "Poppins"),
+                      )
                     ],
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-
-              const Text(
-                ' Previous Visits',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.normal,
+                const SizedBox(
+                  height: 5,
                 ),
-              ),
 
-              Container(
-                child: visitsList.isEmpty && !loaderStatus
-                    ? Container(
-                        margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        child: const Center(
-                          child: Text(
-                            'No Visits',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black,
-                              fontFamily: "Poppins",
-                            ),
-                          ),
-                        ),
-                      )
-                    : Expanded(
-                        child: ListView(
-                          padding: EdgeInsets.zero,
+                if (!loaderStatus)
+                  Card(
+                    color: Color(0xFF607080),
+                    child: Container(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Column(
                           children: [
-                            Container(child: _buildAccountTypeList(visitsList))
+                            Text(
+                              customerName,
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFFFFFFFF),
+                                  fontFamily: 'Poppins'),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "Ac : $accountNum",
+                              style: const TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFFFFFFFF),
+                                  fontFamily: 'Poppins'),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Container(child: _cardItem(accountInfo)),
+                            )
                           ],
                         ),
                       ),
-              )
-              // List of Items (Replace with your actual list)
-              ,
-            ],
-          ),
-        )),
-        if (loaderStatus)
-          // Loader overlay
-          Container(
-            color: Colors.black.withOpacity(0.5),
-            // Change the color and opacity as needed
-            child: const Center(
-              child: CircularProgressIndicator(
-                color: Colors.white,
-              ),
+                    ),
+                  ),
+
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Row(
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddVisit(
+                                        title: '',
+                                        accountNum: accountNum,
+                                        refreshFunction: refreshData)));
+                          },
+                          style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF456EFE),
+                              // Set the background color to #456EFE
+                              minimumSize: Size(double.infinity, 50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    8.0), // Set the desired border radius
+                              ) // Set width and height
+                              ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.add_circle_outline_sharp,
+                                color: Color(0xFFFFFFFF),
+                                size: 15,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text('New Visit',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                    color: Color(0xFFFFFFFF),
+                                    fontFamily: "Poppins",
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddVisit(
+                                        title: '',
+                                        accountNum: accountNum,
+                                        refreshFunction: refreshData)));
+                          },
+                          style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF456EFE),
+                              // Set the background color to #456EFE
+                              minimumSize: Size(double.infinity, 50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    8.0), // Set the desired border radius
+                              ) // Set width and height
+                              ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.add_circle_outline_sharp,
+                                color: Color(0xFFFFFFFF),
+                                size: 15,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text('New Commit',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                    color: Color(0xFFFFFFFF),
+                                    fontFamily: "Poppins",
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+
+                const TabBar(
+                  indicatorColor: Colors.grey,
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Colors.grey,
+                  tabs: [
+                    Text(
+                      'Visits',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    Text(
+                      'Commits',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    Text(
+                      'Documents',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      // Content for Tab 1
+                      Container(
+                        child: visitsList.isEmpty && !loaderStatus
+                            ? Container(
+                                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                child: const Center(
+                                  child: Text(
+                                    'No Visits',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black,
+                                      fontFamily: "Poppins",
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : ListView(
+                                padding: EdgeInsets.zero,
+                                children: [
+                                  Container(
+                                    child: _buildAccountTypeList(visitsList),
+                                  ),
+                                ],
+                              ),
+                      ),
+                      // Content for Tab 2
+                      Container(
+                          // Add content for Tab 2
+                          ),
+                      // Content for Tab 3
+                      Container(
+                          // Add content for Tab 3
+                          ),
+                    ],
+                  ),
+                )
+              ],
             ),
-          )
-      ],
+          )),
+          if (loaderStatus)
+            // Loader overlay
+            Container(
+              color: Colors.black.withOpacity(0.5),
+              // Change the color and opacity as needed
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              ),
+            )
+        ],
+      ),
     );
   }
 
@@ -459,7 +488,8 @@ class _AccountTrrnList extends State<AccountTrrnList> {
             color: Color(0xFFFFFFFF),
             shape: RoundedRectangleBorder(
               side: BorderSide(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8.0), // Set the desired border radius
+              borderRadius:
+                  BorderRadius.circular(8.0), // Set the desired border radius
             ),
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -471,8 +501,11 @@ class _AccountTrrnList extends State<AccountTrrnList> {
                       'assets/ic_visitor.png',
                       width: 40,
                       height: 40,
+                      color: Color(0xFF607080),
                     ),
-                    SizedBox(width: 20,),
+                    SizedBox(
+                      width: 20,
+                    ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -494,7 +527,7 @@ class _AccountTrrnList extends State<AccountTrrnList> {
                                 style: TextStyle(
                                   fontSize: 12.0,
                                   fontWeight: FontWeight.normal,
-                                  color:  Colors.black,
+                                  color: Colors.black,
                                   // textAlign: TextAlign.right
                                 ),
                               ),

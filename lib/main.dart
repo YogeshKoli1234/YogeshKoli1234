@@ -13,9 +13,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        scaffoldBackgroundColor: Colors.white, // Set your background color here
+        scaffoldBackgroundColor: Colors.white,
+        // Set your background color here
+        // tabBarTheme: const TabBarTheme(
+        //     labelColor: Colors.grey,
+        //     labelStyle: TextStyle(color: Colors.grey), // color for text
+        //
+        //     indicator: UnderlineTabIndicator(
+        //         // color for indicator (underline)
+        //         borderSide: BorderSide(color: Colors.red)))
       ),
       home: const SplashScreen(title: 'Flutter Demo Home Page'),
     );
@@ -45,7 +54,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
-
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const SplashScreen(title: "")),
